@@ -19,6 +19,7 @@ import java.util.List;
 public class User implements UserDetails {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+    private String name;
     private String email;
     private String password;
 
@@ -28,7 +29,8 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private WorkSchedule work_schedule;
 
-    public User(String email, String password, UserRole role, WorkSchedule work_schedule) {
+    public User(String name, String email, String password, UserRole role, WorkSchedule work_schedule) {
+        this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;
