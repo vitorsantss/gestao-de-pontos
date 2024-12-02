@@ -1,4 +1,7 @@
 package com.sants.gestaodeponto.domain.user;
 
-public record AuthenticationDTO(String email, String password) {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+public record AuthenticationDTO(@NotBlank @NotNull String email, @NotBlank @NotNull String password) {
 }
