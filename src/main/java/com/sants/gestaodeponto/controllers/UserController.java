@@ -2,18 +2,18 @@ package com.sants.gestaodeponto.controllers;
 
 import com.sants.gestaodeponto.domain.user.RequestUserDTO;
 import com.sants.gestaodeponto.domain.user.ResponseUserDTO;
-import com.sants.gestaodeponto.domain.user.User;
 import com.sants.gestaodeponto.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("users")
+@RequestMapping("/users")
+@Validated
 public class UserController {
 
     @Autowired
@@ -22,27 +22,26 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<ResponseUserDTO>> getAllUsers() {
         List<ResponseUserDTO> users = userService.getAllUsers();
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable String id) {
-        Optional<User> user = userService.getUserById(id);
-        return user.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<ResponseUserDTO> getUserById(@PathVariable String id) {
+        ResponseUserDTO user = userService.getUserById(id);
+        return ResponseEntity.ok(user);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody RequestUserDTO data) {
-        Optional<User> updatedUser = userService.updateUser(id, data);
-        return updatedUser.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<ResponseUserDTO> updateUser(
+            @PathVariable String id,
+            @Valid @RequestBody RequestUserDTO data) {
+        ResponseUserDTO updatedUser = userService.updateUser(id, data);
+        return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
-        boolean isDeleted = userService.deleteUser(id);
-        return isDeleted ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }
