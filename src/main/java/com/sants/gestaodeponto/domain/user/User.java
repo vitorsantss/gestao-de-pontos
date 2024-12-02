@@ -1,6 +1,9 @@
 package com.sants.gestaodeponto.domain.user;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,13 +22,22 @@ import java.util.List;
 public class User implements UserDetails {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+
+    @NotBlank(message = "O nome é obrigatório.")
     private String name;
+
+    @NotBlank(message = "O email é obrigatório.")
+    @Email(message = "O email deve ser válido.")
     private String email;
+
+    @NotBlank(message = "A senha é obrigatória.")
     private String password;
 
+    @NotNull(message = "O papel do usuário é obrigatório.")
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    @NotNull(message = "O regime de jornada de trabalho é obrigatório.")
     @Enumerated(EnumType.STRING)
     private WorkSchedule work_schedule;
 
